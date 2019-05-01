@@ -179,19 +179,5 @@ which(redundant)
 rules.pruned <- rules.sorted[!redundant]
 inspect(rules.pruned)
 ```
-####6.SUBSET RULES
-####6.1 iMac
-```{r}
-ItemRules_iMac<- subset(rules.sorted, subset=rhs %pin% "iMac")
-ItemRules_iMac
-inspect(ItemRules_iMac)
-```
-####6.2 Apple MacBook Air
-```{r}
-
-ItemRules_MacBook <- subset(rules.sorted, items %in% "Apple MacBook Air")
-ItemRules_MacBook
-inspect(ItemRules_MacBook)
-```
 
 
