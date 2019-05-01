@@ -1,0 +1,9 @@
+,LHS,RHS,support,confidence,lift,count
+63,"{Accessories,Display,Laptop,Printer}",{PC},0.005547054,0.659090909,1.670250738,29
+52,"{Display,Laptop,Printer}",{PC},0.006312165,0.6,1.52050412,33
+64,"{Accessories,Display,PC,Printer}",{Laptop},0.005547054,0.591836735,1.458803606,29
+33,"{Display,Laptop,Printer Supplies}",{Accessories},0.005547054,0.878787879,1.39263505,29
+62,"{Display,Laptop,PC,Printer}",{Accessories},0.005547054,0.878787879,1.39263505,29
+45,"{Display,Laptop,Tablet}",{Accessories},0.008224943,0.87755102,1.390674973,43
+56,"{Display,PC,Printer}",{Accessories},0.009372609,0.859649123,1.36230543,49
+37,"{Laptop,PC,Printer Supplies}",{Accessories},0.005547054,0.852941176,1.351675196,29

@@ -1,0 +1,210 @@
+---
+title: "ProductAssociatons"
+author: "Stacey Jackson"
+date: "03/04/2019"
+output: word_document
+---
+```{r}
+library(arules)
+library(arulesViz)
+library(dplyr)
+```
+####1. Upload the dataset
+
+```{r}
+transactions_B2B<-read.transactions(file="/Users/staceyjackson/Dropbox (Personal)/Ubiqum/DataAnalytics2/ProductAssociations/Data/B2BTransacs.csv",sep = ",", header = T, rm.duplicates = FALSE, quote = "\"'", skip = 0, encoding = "unknown")
+
+transactions_B2C<-read.transactions(file="/Users/staceyjackson/Dropbox (Personal)/Ubiqum/DataAnalytics2/ProductAssociations/Data/B2CTransacs.csv",sep = ",", header = T, rm.duplicates = FALSE, quote = "\"'", skip = 0, encoding = "unknown")
+
+Categories<-read.csv(file="/Users/staceyjackson/Dropbox (Personal)/Ubiqum/DataAnalytics2/ProductAssociations/Data/ProductCategories.csv", header=TRUE, sep=",")
+
+
+```
+
+####2. Inspect dataset
+```{r}
+length(transactions_B2B)
+size(transactions_B2B)
+#LIST(transactions_B2B)
+itemLabels(transactions_B2B)
+```
+####3. PLOTS OF FREQUENCY
+####3.1 Plots of most frequent items
+```{r}
+
+itemFrequencyPlot(transactions_B2B,
+                  type="absolute",
+                  topN=10,
+                  horiz=FALSE,
+                  col='steelblue3',
+                  xlab='',
+                  main='Item frequency, absolute')
+
+
+```
+####3.2 Plots of least frequent items
+```{r}
+
+barplot(sort(table(unlist(LIST(transactions_B2B))))[1:10],
+        horiz=TRUE,
+        las=1,
+        col='steelblue3',
+        xlab='',
+        main='Frequency, absolute')
+```
+####4. ASSOCIATION RULES
+```{r}
+
+rules <- apriori(transactions_B2B,parameter = list(minlen=2, supp=0.002, conf=0.8),control = list(verbose=F))
+rules.sorted <- sort(rules, by="lift")
+inspect(rules.sorted[1:10])
+#ruleExplorer(rules.sorted)
+```
+
+#### 5. CREATE LABELS FOR B2B CATEGORIES
+```{r}
+TempDFB2B <- as.data.frame(transactions_B2B@itemInfo$labels)
+
+colnames(TempDFB2B) <- "ProdName"
+
+TempDFB2B
+
+TempDFB2B2 <- merge(TempDFB2B, Categories, by.x="ProdName", by.y="ProdName")
+
+transactions_B2B@itemInfo$categories <- TempDFB2B2$BWCat
+
+transactions_B2BAgg <- aggregate(transactions_B2B, by = "categories")
+
+summary(transactions_B2BAgg)
+str(transactions_B2BAgg)
+```
+####5.1.Plot for transactions_B2BAgg 
+```{r}
+
+itemFrequencyPlot(transactions_B2BAgg,
+                  type="absolute",
+                  topN=10,
+                  horiz=FALSE,
+                  col='steelblue3',
+                  xlab='',
+                  main='Item frequency, absolute')
+
+
+
+
+```
+
+#### 6. B2B TRANSACTION RULES
+```{r}
+
+rules <- apriori(transactions_B2BAgg,parameter = list(minlen=2, supp=0.002, conf=0.7),control = list(verbose=F))
+rules.sorted <- sort(rules, by="lift")
+inspect(rules.sorted[1:10])
+labels(rules.sorted[1:10], itemSep = " + ", setStart = "", setEnd="", ruleSep = " ---> ")
+#ruleExplorer(rules.sorted)
+```
+
+####6.1 Redundant rules
+```{r}
+is.redundant(rules.sorted)
+which(is.redundant(rules.sorted), arr.ind = TRUE, useNames = TRUE)
+
+
+```
+####6.2 Prune redundant rules
+```{r}
+
+rules.sorted<- rules.sorted[!is.redundant(rules.sorted)]
+is.redundant(rules.sorted)
+
+
+```
+####6.3 Inspect pruned rules
+```{r}
+#ruleExplorer(rules.pruned)
+rules.pruned <- sort(rules, by="lift")
+inspect(rules.pruned[1:10])
+labels(rules.pruned[1:10], itemSep = " + ", setStart = "", setEnd="", ruleSep = " ---> ")
+
+```
+####6.4 Graph of the pruned rules
+```{r}
+
+plot(rules.pruned[1:10], method = "graph", control = list(type = "items"))
+```
+####7. CREATE LABELS FOR B2C CATEGORIES
+```{r}
+TempDFB2C <-
+as.data.frame(transactions_B2C@itemInfo$labels)
+
+colnames(TempDFB2C) <- "ProdName"
+
+TempDFB2C
+
+TempDFB2BC <-
+ merge(TempDFB2C, Categories, by.x="ProdName", by.y="ProdName")
+
+
+
+transactions_B2C@itemInfo$categories <- TempDFB2BC$BWCat
+
+#creating transactional for Prod. Category
+transactions_B2CAgg <- aggregate(transactions_B2C, by = "categories")
+
+summary(transactions_B2CAgg)
+str(transactions_B2CAgg)
+```
+####7.1 Plots of transactions_B2CAgg
+```{r}
+
+itemFrequencyPlot(transactions_B2CAgg,
+                  type="absolute",
+                  topN=10,
+                  horiz=FALSE,
+                  col='steelblue3',
+                  xlab='',
+                  main='Item frequency, absolute')
+
+
+
+
+```
+#### 8.B2C TRANSACTION RULES
+```{r}
+
+rulesB2C <- apriori(transactions_B2CAgg,parameter = list(minlen=2, supp=0.002, conf=0.7),control = list(verbose=F))
+rulesB2C.sorted <- sort(rulesB2C, by="lift")
+inspect(rulesB2C.sorted[1:10])
+labels(rulesB2C.sorted[1:10], itemSep = " + ", setStart = "", setEnd="", ruleSep = " ---> ")
+#ruleExplorer(rulesB2C.sorted)
+
+```
+####8.1 Redundant rules
+```{r}
+is.redundant(rulesB2C.sorted)
+which(is.redundant(rulesB2C.sorted), arr.ind = TRUE, useNames = TRUE)
+
+```
+####8.2 Prune redundant rules
+```{r}
+
+rulesB2C.sorted<- rulesB2C.sorted[!is.redundant(rulesB2C.sorted)]
+is.redundant(rulesB2C.sorted)
+
+```
+####8.3 Inspect pruned rules
+```{r}
+rulesB2C.pruned <- sort(rulesB2C.sorted, by="lift")
+inspect(rulesB2C.pruned)
+labels(rulesB2C.pruned, itemSep = " + ", setStart = "", setEnd="", ruleSep = " ---> ")
+
+#ruleExplorer(rulesB2C.pruned)
+
+```
+####8.4 Graph of the pruned rules
+```{r}
+
+plot(rulesB2C.pruned, method = "graph", control = list(type = "items"))
+```
+
+

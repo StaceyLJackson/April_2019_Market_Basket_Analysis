@@ -1,0 +1,22 @@
+---
+title: "ProductAssociation_divided"
+author: "Stacey Jackson"
+date: "04/04/2019"
+output: word_document
+---
+Upload libraries and file
+```{r}
+library(arules)
+library(arulesViz)
+library(dplyr)
+
+
+transactions<-read.csv(file="/Users/staceyjackson/Dropbox (Personal)/Ubiqum/DataAnalytics2/ProductAssociations/Data/ElectronidexTransactions2017.csv", header=FALSE, sep=",")
+
+transactions<-as.data.frame(transactions)
+transactions
+
+```
+
+
+

@@ -1,0 +1,65 @@
+---
+title: "Blackwells"
+author: "Stacey Jackson"
+date: "08/04/2019"
+output: html_document
+---
+Load data
+```{r}
+library(ggplot2)
+library(dplyr)
+Blackwells<-read.csv(file="/Users/staceyjackson/Dropbox (Personal)/Ubiqum/DataAnalytics/Task2_predicting_profitability/Data/existingProductAttributes_V2.csv", header=TRUE, sep=",")
+```
+Plots
+```{r}
+
+no_warranty<-Blackwells[-c(32:41),]
+no_warranty
+p <- ggplot(data=no_warranty, aes(x=ProductType, y=Volume))
+p+geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 20))
+
+
+no_warranty<-Blackwells[-c(32:41),]
+no_warranty
+p <- ggplot(data=no_warranty, aes(x=ProductType, y=Volume))
+p+geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 20))
+
+
+p <- ggplot(data=no_warranty, aes(x=ProductType, y=Volume))
+p+geom_bar(stat="identity")+
+  theme(axis.text.x = element_text(angle = 20))
+
+p <- ggplot(data=no_warranty, aes(x=ProductType, y=ProfitMargin))
+p+geom_point()+
+  theme(axis.text.x = element_text(angle = 20))
+
+
+p <- ggplot(data=no_warranty, aes(x=ProductType, y=ProfitMargin))
+p+geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 20))
+
+
+p <- ggplot(data=no_warranty, aes(x=Volume, y=ProfitMargin, fill=ProductType, color=ProductType))
+p+geom_point() 
+
+
+no_outliers<-filter(no_warranty, Volume < 2000)
+p <- ggplot(data=no_outliers, aes(x=Volume, y=ProfitMargin, fill=ProductType, color=ProductType))
+p+geom_point() 
+
+p <- ggplot(data=no_outliers, aes(x=ProductType, y=Volume, color=ProfitMargin))
+p+geom_point() +
+  theme(axis.text.x = element_text(angle = 20))
+
+p <- ggplot(data=no_warranty, aes(x=ProductType, y=Price))
+p+geom_point() +
+  theme(axis.text.x = element_text(angle = 20))
+
+p <- ggplot(data=no_warranty, aes(x=ProductType, y=Price, color=ProfitMargin))
+p+geom_point() +
+  theme(axis.text.x = element_text(angle = 20))
+
+```
+

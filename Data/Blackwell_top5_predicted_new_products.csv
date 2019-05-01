@@ -1,0 +1,6 @@
+﻿Position,Product ID,Brand Name,Price,Profit margin,Predicted Volume,Profitability
+1,171,Dell,$699.00,0.25,889,"$155,352.75"
+2,186,Apple,$629.00,0.1,1537,"$96,677.30"
+3,187,Amazon,$199.00,0.2,1612,"$64,157.60"
+4,180,Acer,$329.00,0.09,1537,"$45,510.57"
+5,199,Sony,$249.99,0.09,1537,"$34,581.12"
